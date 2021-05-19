@@ -440,7 +440,7 @@ function render() {
     // draw net
     drawNet();
     // draw user score
-    drawScore((canvas.width / 10), canvas.height / 6, `${computersPlayTogether ? "Computer" : "You"}: ${user.score}`);
+    drawScore((canvas.width / 10), canvas.height / 6, `${computersPlayTogether ? "Normies" : "You"}: ${user.score}`);
     // draw ai score
     drawScore(6 * canvas.width / 10, canvas.height / 6, `GrayBot: ${ai.score}`);
     // draw user paddle
