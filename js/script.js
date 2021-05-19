@@ -43,7 +43,7 @@ function changePlayer() {
     }
     computersPlayTogether = !computersPlayTogether;
     stopGame();
-    startGame();
+    //startGame();
 }
 
 function mute() {
@@ -389,24 +389,24 @@ function update() {
 
 
         // if ball hit the top fourth of paddle
-        if (0 <= ballfromPaddleTop && ballfromPaddleTop < _part) {
+        if (0 <= ballfromPaddleTop && ballfromPaddleTop <= _part) {
             // then -1 * Math.PI / 12 = -15deg
             //angle = -1 * Math.PI / 12;
             let divdor = ((Math.PI / 4 - Math.PI / 12) / _part) * ballfromPaddleTop;
             angle = -1 * divdor;
-        } else if (_part <= ballfromPaddleTop && ballfromPaddleTop < (_part * 2)) {
+        } else if (_part <= ballfromPaddleTop && ballfromPaddleTop <= (_part * 2)) {
             // if it hit second 4th of paddle
             // then angle will be -1 * Math.PI / 4 = -45deg
             //angle = -1 * Math.PI / 4;
             let divdor = ((Math.PI / 4 - 0) / _part) * (ballfromPaddleTop - _part);
             angle = -1 * divdor;
-        } else if ((_part * 2) < ballfromPaddleTop && ballfromPaddleTop < (_part * 3)) {
+        } else if ((_part * 2) <= ballfromPaddleTop && ballfromPaddleTop <= (_part * 3)) {
             // if it hit third 4th of paddle
             // then angle will be Math.PI / 4 = 45deg
             //angle = Math.PI / 4;
             let divdor = ((Math.PI / 4 - 0) / _part) * (ballfromPaddleTop - (2 * _part));
             angle = divdor;
-        } else if ((_part * 3) <= ballfromPaddleTop && ballfromPaddleTop < (_part * 4)) {
+        } else if ((_part * 3) <= ballfromPaddleTop && ballfromPaddleTop <= (_part * 4)) {
             // if it hit third 4th of paddle
             // then angle will be Math.PI / 12 = 15deg
             //angle = Math.PI / 12;
