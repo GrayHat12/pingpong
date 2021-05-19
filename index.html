@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- meta tags are not necessary here, but having them always is a good practice -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- title -->
+    <title>Ping Pong</title>
+    <!-- css -->
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+
+    <!-- our "canvas" where we draw things-->
+    <canvas id="canvas" width="600" height="400"></canvas>
+    <div class="bar">
+        <div class="item">
+            <button id="muteButton"></button>
+        </div>
+        <div class="item">
+            <label for="difficulty">Difficulty</label>
+            <select name="difficulty" id="difficulty">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- link to script.js -->
+    <script defer type="text/javascript" src="js/script.js"></script>
+</body>
+
+</html>
