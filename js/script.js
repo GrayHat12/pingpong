@@ -24,12 +24,27 @@ const notmutedElStr = `
 `;
 let gameInterval;
 let started = false;
+let computersPlayTogether = true;
 
 const difficultyEl = document.getElementById("difficulty");
+const playAgainst = document.getElementById("playagainst");
+
+playAgainst.addEventListener("click", changePlayer);
 difficultyEl.addEventListener("change", onChangeDifficulty);
 
 muteButton.addEventListener("click", mute);
 muteButton.innerHTML = notmutedElStr;
+
+function changePlayer() {
+    if (computersPlayTogether) {
+        playAgainst.innerText = "Let Computers Play against each other";
+    } else {
+        playAgainst.innerText = "Play Against Graybot";
+    }
+    computersPlayTogether = !computersPlayTogether;
+    stopGame();
+    startGame();
+}
 
 function mute() {
     hitSound.muted = !hitSound.muted;
@@ -287,14 +302,16 @@ function collisionDetect(player, ball) {
 // update function, to update things position
 function update() {
 
-    // move the paddle
-    /*if (upArrowPressed && user.y > 0) {
-        user.y -= 8;
-    } else if (downArrowPressed && (user.y < canvas.height - user.height)) {
-        user.y += 8;
-    }*/
-
-    user.y += ((ball.y - (user.y + user.height / 2))) * 0.09;
+    if (computersPlayTogether) {
+        user.y += ((ball.y - (user.y + user.height / 2))) * 0.09;
+    } else {
+        // move the paddle
+        if (upArrowPressed) {
+            user.y -= 8;
+        } else if (downArrowPressed) {
+            user.y += 8;
+        }
+    }
     user.y = Math.max(0, user.y);
     user.y = Math.min(canvas.height - user.height, user.y);
 
@@ -367,24 +384,37 @@ function update() {
         let angle = 0;
 
         let part = player.y + (player.height / 4);
+        let _part = player.height / 4;
+        let ballfromPaddleTop = ball.y - player.y;
+
 
         // if ball hit the top fourth of paddle
-        if (0 <= ball.y && ball.y < part) {
+        if (0 <= ballfromPaddleTop && ballfromPaddleTop < _part) {
             // then -1 * Math.PI / 12 = -15deg
-            angle = -1 * Math.PI / 12;
-        } else if (part <= ball.y && ball.y < (part * 2)) {
+            //angle = -1 * Math.PI / 12;
+            let divdor = ((Math.PI / 4 - Math.PI / 12) / _part) * ballfromPaddleTop;
+            angle = -1 * divdor;
+        } else if (_part <= ballfromPaddleTop && ballfromPaddleTop < (_part * 2)) {
             // if it hit second 4th of paddle
             // then angle will be -1 * Math.PI / 4 = -45deg
-            angle = -1 * Math.PI / 4;
-        } else if ((part * 2) < ball.y && ball.y < (part * 3)) {
+            //angle = -1 * Math.PI / 4;
+            let divdor = ((Math.PI / 4 - 0) / _part) * (ballfromPaddleTop - _part);
+            angle = -1 * divdor;
+        } else if ((_part * 2) < ballfromPaddleTop && ballfromPaddleTop < (_part * 3)) {
             // if it hit third 4th of paddle
             // then angle will be Math.PI / 4 = 45deg
-            angle = Math.PI / 4;
-        } else if ((part * 3) <= ball.y && ball.y < (part * 4)) {
+            //angle = Math.PI / 4;
+            let divdor = ((Math.PI / 4 - 0) / _part) * (ballfromPaddleTop - (2 * _part));
+            angle = divdor;
+        } else if ((_part * 3) <= ballfromPaddleTop && ballfromPaddleTop < (_part * 4)) {
             // if it hit third 4th of paddle
             // then angle will be Math.PI / 12 = 15deg
-            angle = Math.PI / 12;
+            //angle = Math.PI / 12;
+            let divdor = ((Math.PI / 4 - Math.PI / 12) / _part) * (ballfromPaddleTop - (3 * _part));
+            angle = divdor;
         }
+
+        //console.log('angle', angle, ballfromPaddleTop, _part, ball, player);
 
         /* change velocity of ball according to on which paddle the ball hitted */
         ball.velocityX = (player === user ? 1 : -1) * ball.speed * Math.cos(angle);
@@ -410,7 +440,7 @@ function render() {
     // draw net
     drawNet();
     // draw user score
-    drawScore((canvas.width / 10), canvas.height / 6, `Computer: ${user.score}`);
+    drawScore((canvas.width / 10), canvas.height / 6, `${computersPlayTogether ? "Computer" : "You"}: ${user.score}`);
     // draw ai score
     drawScore(6 * canvas.width / 10, canvas.height / 6, `GrayBot: ${ai.score}`);
     // draw user paddle
