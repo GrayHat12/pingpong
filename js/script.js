@@ -266,12 +266,27 @@ function reset() {
     ball.velocityY = -ball.velocityY;
 }
 
+function deflectedPrediction(py, m) {
+    let _px = ball.x - (ball.y / m);
+    if (_px < ball.x || _px <= 0) {
+        return py;
+    }
+    let _nextX = _px + ball.velocityX + ball.additionalX;
+    let _nextY = 0 - ball.velocityY - ball.additionalY;
+    let _m = (_nextY) / (_nextX - _px);
+    let _py = -_m * (_px - canvas.width);
+    return _py;
+}
+
 function moveAIPaddle() {
     let nextX = ball.x + ball.velocityX + ball.additionalX;
     let nextY = ball.y + ball.velocityY + ball.additionalY;
     if (nextX < ball.x) return;
     let m = (nextY - ball.y) / (nextX - ball.x);
     let py = ball.y - m * (ball.x - canvas.width);
+    if (py < 0 && difficultyLevel > 2) {
+        py = deflectedPrediction(py, m);
+    }
     let tomove = py - (ai.y + ai.height / 2);
     if (tomove < 0) {
         ai.y += Math.max(tomove, -8);
@@ -280,6 +295,16 @@ function moveAIPaddle() {
     }
     ai.y = Math.max(0, ai.y);
     ai.y = Math.min(canvas.height - ai.height, ai.y);
+}
+function moveNormiePaddle() {
+    let tomove = ball.y - (user.y + user.height / 2);
+    if (tomove < 0) {
+        user.y += Math.max(tomove, -8);
+    } else {
+        user.y += Math.min(tomove, 8);
+    }
+    user.y = Math.max(0, user.y);
+    user.y = Math.min(canvas.height - user.height, user.y);
 }
 
 
@@ -303,7 +328,8 @@ function collisionDetect(player, ball) {
 function update() {
 
     if (computersPlayTogether) {
-        user.y += ((ball.y - (user.y + user.height / 2))) * 0.09;
+        if (difficultyLevel > 2) moveNormiePaddle();
+        else user.y += ((ball.y - (user.y + user.height / 2))) * 0.09;
     } else {
         // move the paddle
         if (upArrowPressed) {
