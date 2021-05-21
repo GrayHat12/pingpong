@@ -6,9 +6,9 @@ const ctx = canvas.getContext('2d');
 
 
 // some sounds
-const hitSound = new Audio('/sounds/hitSound.wav');
-const scoreSound = new Audio('/sounds/scoreSound.wav');
-const wallHitSound = new Audio('/sounds/wallHitSound.wav');
+const hitSound = new Audio('../sounds/hitSound.wav');
+const scoreSound = new Audio('../sounds/scoreSound.wav');
+const wallHitSound = new Audio('../sounds/wallHitSound.wav');
 const muteButton = document.getElementById("muteButton");
 const mutedElStr = `
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-mute-fill" viewBox="0 0 16 16">
