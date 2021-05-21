@@ -100,6 +100,13 @@ const net = {
     color: "#FFF"
 };
 
+const line = {
+    p1: null,
+    p2: null,
+    p3: null,
+    color: "#b6bab7"
+};
+
 // user paddle
 let user = {
     x: 10,
@@ -266,15 +273,22 @@ function reset() {
     ball.velocityY = -ball.velocityY;
 }
 
-function deflectedPrediction(py, m) {
+function deflectedPredictionFromTop(py, m) {
     let _px = ball.x - (ball.y / m);
-    if (_px < ball.x || _px <= 0) {
-        return py;
-    }
     let _nextX = _px + ball.velocityX + ball.additionalX;
     let _nextY = 0 - ball.velocityY - ball.additionalY;
     let _m = (_nextY) / (_nextX - _px);
     let _py = -_m * (_px - canvas.width);
+    line.p3 = [600, _py];
+    return _py;
+}
+function deflectedPredictionFromBottom(py, m) {
+    let _px = ball.x - (ball.y / m);
+    let _nextX = _px + ball.velocityX + ball.additionalX;
+    let _nextY = -400 - ball.velocityY - ball.additionalY;
+    let _m = (_nextY - 400) / (_nextX - _px);
+    let _py = -400 - _m * (_px - canvas.width);
+    line.p3 = [600, _py];
     return _py;
 }
 
@@ -284,8 +298,12 @@ function moveAIPaddle() {
     if (nextX < ball.x) return;
     let m = (nextY - ball.y) / (nextX - ball.x);
     let py = ball.y - m * (ball.x - canvas.width);
+    let px = ball.x - (ball.y / m);
+    line.p1 = [ball.x, ball.y];
+    line.p2 = [px, Math.min(0, Math.max(-600, py))];
     if (py < 0 && difficultyLevel > 2) {
-        py = deflectedPrediction(py, m);
+        line.p2 = [px, 0];
+        py = deflectedPredictionFromTop(py, m);
     }
     let tomove = py - (ai.y + ai.height / 2);
     if (tomove < 0) {
@@ -475,6 +493,22 @@ function render() {
     drawPaddle(ai.x, ai.y, ai.width, ai.height, ai.color);
     // draw ball
     drawBall(ball.x, ball.y, ball.radius, ball.color);
+    // draw predicted lines
+    /*if (line.p1 && line.p2) {
+        ctx.beginPath();
+        ctx.setLineDash([5, 3]);
+        ctx.strokeStyle = line.color;
+        ctx.moveTo(Math.abs(line.p1[0]), Math.abs(line.p1[1]));
+        ctx.lineTo(Math.abs(line.p2[0]), Math.abs(line.p2[1]));
+        if (line.p3) {
+            console.log(line.p3);
+            ctx.lineTo(Math.abs(line.p3[0]), Math.abs(line.p3[1]));
+        }
+        ctx.stroke();
+    }
+    line.p1 = null;
+    line.p2 = null;
+    line.p3 = null;*/
 }
 
 
